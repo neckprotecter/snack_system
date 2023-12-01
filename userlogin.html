@@ -1,0 +1,107 @@
+<!-- <form method="post" action="userlogin_do.php"> -->
+<!-- <style>
+    body
+    {
+        text-align: center; /* 居中显示文本 */
+        padding: 20px; /* 增大上下行间距 */
+        margin-bottom : 20px;
+    }
+    label, input
+    {
+        margin-top : 10px; /* 增大上下行间距 */
+        margin-bottom : 10px; /* 增大上下行间距 */
+    }
+</style>
+<form method="post" action="http://localhost/userlogin_do.php">
+    <h1>登录页面</h1>
+    <br>
+    <input type="text" name="username" placeholder="输入你的登录名">
+    <br>
+    <input type="password" name="password" placeholder="输入密码">
+    <br>
+    <input type="submit" value="登录">
+</form>
+     -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="GBK">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录页面</title>
+    <style>
+        html {
+            height: 100%; /* 设置html元素高度为100%确保渐变背景覆盖整个屏幕 */
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            background: linear-gradient(to bottom, #3498db, #2c3e50); /* 添加渐变背景 */
+            color: #fff; /* 文字颜色为白色 */
+            display: flex;
+            flex-direction: column;
+            /* background-size: cover; 覆盖整个视口 */
+            min-height: 100%; /* 确保body至少和屏幕高度一样高 */
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.8); /* 设置透明白色背景 */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-size: cover; /* 设置背景大小为覆盖整个容器 */
+        }
+
+        h1 {
+            color: #333333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<form method="post" action="http://localhost/userlogin_do.php">
+    <h1>登录页面</h1>
+    <label for="username">用户名：</label>
+    <input type="text" id="username" name="username" placeholder="输入你的用户名" required>
+
+    <label for="password">密码：</label>
+    <input type="password" id="password" name="password" placeholder="输入你的密码" required>
+
+    <input type="submit" value="登录">
+</form>
+
+</body>
+</html>
