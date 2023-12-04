@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $utf8_snack_name = mb_convert_encoding($snack_name, "UTF-8", mb_detect_encoding($snack_name, $encoding));
 
     // 连接到数据库
-    $conn = mysqli_connect("localhost", "root", "root", "snack");
+    $conn = mysqli_connect("10.151.1.73", "root", "root", "snack");
 
     if (!$conn)
         die("数据库连接失败: " . mysqli_connect_error());

@@ -1,3 +1,5 @@
+<!-- 这个文件没有作用，只是为了进行代码备份 -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +36,7 @@
         header("content-type:text/html; charset=utf-8");         //设置编码
         session_start();
 
-        $servername = "localhost"; // 数据库服务器主机名
+        $servername = "10.151.1.73"; // 数据库服务器主机名
         $username = "root"; // 数据库用户名
         $password = "root"; // 数据库密码
         $database = "snack"; // 数据库名称

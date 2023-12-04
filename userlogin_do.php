@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
 // 连接数据库，查询用户信息
 // 这里需要使用适当的数据库连接方法和SQL查询来检查用户输入的用户名和密码是否匹配
-    $servername = "localhost"; // 数据库服务器主机名
+    $servername = "10.151.1.73"; // 数据库服务器主机名
     $username = "root"; // 数据库用户名
     $password = "root"; // 数据库密码
     $database = "snack"; // 数据库名称
