@@ -1,0 +1,17 @@
+
+.login-container {
+    
+    max-width: 450px;
+    margin:auto;
+    margin-top:100px;
+    padding: 20px; 
+    border: 1px solid #ccc; 
+    border-radius: 8px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(5px); 
+    background: rgba(255, 255, 255, 0.5); 
+    display: flex; 
+    flex-direction: column; 
+
+}
+

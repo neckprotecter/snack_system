@@ -1,80 +1,50 @@
 <?php
-header("content-type:text/html; charset=GBK");         //ÉèÖÃ±àÂë
+header("Content-type: application/json; charset=UTF-8"); 
 session_start();
-
-if ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-// Á¬½ÓÊý¾Ý¿â£¬²éÑ¯ÓÃ»§ÐÅÏ¢
-// ÕâÀïÐèÒªÊ¹ÓÃÊÊµ±µÄÊý¾Ý¿âÁ¬½Ó·½·¨ºÍSQL²éÑ¯À´¼ì²éÓÃ»§ÊäÈëµÄÓÃ»§ÃûºÍÃÜÂëÊÇ·ñÆ¥Åä
-    $servername = "10.151.1.73"; // Êý¾Ý¿â·þÎñÆ÷Ö÷»úÃû
-    $username = "root"; // Êý¾Ý¿âÓÃ»§Ãû
-    $password = "root"; // Êý¾Ý¿âÃÜÂë
-    $database = "snack"; // Êý¾Ý¿âÃû³Æ
-
-    // ´´½¨Êý¾Ý¿âÁ¬½Ó
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $servername = "localhost"; 
+    $username = "root"; 
+    $password = "root"; 
+    $database = "snack"; 
+    $responseData = [];
     $conn = new mysqli($servername, $username, $password, $database);
-    // ¼ì²éÁ¬½ÓÊÇ·ñ³É¹¦
-    if ($conn->connect_error)
-        die("Á¬½ÓÊý¾Ý¿âÊ§°Ü: " . $conn->connect_error);
-
-// ´ÓÓÃ»§Ìá½»µÄ±íµ¥Êý¾ÝÖÐ»ñÈ¡ÓÃ»§Ãû
-    // $_POST ÊÇÒ»¸ö³¬È«¾ÖÊý×é£¬ÓÃÓÚ´Ó POST ÇëÇóÖÐ»ñÈ¡Êý¾Ý¡£POST ÇëÇóÍ¨³£ÓÃÓÚÏò·þÎñÆ÷Ìá½»±íµ¥Êý¾Ý
-    $username = $_POST["username"]; 
-    $password = $_POST["password"];
-    if ($password == "")
-    {
-        echo "µÇÂ½Ê§°Ü£¬ÃÜÂë²»ÄÜÎª¿Õ£¬ÇëÖØÊÔ¡£";
+    if ($conn->connect_error) {
+        echo json_encode(['error' => 'æ•°æ®åº“è¿žæŽ¥å¤±è´¥']);
         exit;
     }
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);  // ¹þÏ£´¦Àí
+    $username = $_POST["username"];
+    $password = $_POST["password"];
 
-
-// ²éÑ¯userÐÅÏ¢
-    $query = "SELECT * FROM users";
+    $query = "SELECT * FROM users WHERE username = '$username'";
     $result = $conn->query($query);
 
-    if($result->num_rows > 0)
-    {
-        while($row = $result->fetch_assoc())
-        {
-            $user_name = $row["username"];
-            $user_password = $row["password"];
-            $user_role = $row["role"];
-            if($user_name == $username)
-                break;
-        }
-        $user_hashed_password = password_hash($user_password, PASSWORD_DEFAULT);  // ¹þÏ£´¦Àí
-
-        $user = $result->fetch_assoc();
-        // $stored_role = $user["role"];
-        
-        if (password_verify($password, $user_hashed_password))
-        {
-            // ÓÃ»§ÃûºÍÃÜÂëÆ¥Åä£¬µÇÂ¼³É¹¦
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $user_password = $row["password"];
+        $user_role = $row["role"];
+        if ($password === $user_password) {
             $_SESSION["username"] = $username;
             $_SESSION["role"] = $user_role;
             
-            
-            // ¸ù¾ÝÓÃ»§µÄ½ÇÉ«ÖØ¶¨Ïòµ½²»Í¬µÄÒ³Ãæ
-            if (!strcmp($_SESSION["role"], "admin"))
-            {
-                header("Location: admin_dashboard.php");
+            if (!strcmp($_SESSION["role"], "admin")) {
+                $responseData['username'] = $username;
+                $responseData['redirect'] = 'admin_dashboard.html';
+            } else {
+                $responseData['username'] = $username;
+                $responseData['redirect'] = 'member_dashboard.html';
             }
-            else
-            {
-                header("Location: member_dashboard.php");
-            }
+        } else {
+            echo json_encode(['username' => $username, 'input_password' => $password, 'db_password' => $user_password]);
+            $responseData['error'] = 'å¯†ç ä¸æ­£ç¡®';
         }
-        else
-        {
-            // ÃÜÂë²»Æ¥Åä
-            echo "µÇÂ¼Ê§°Ü£¬Çë¼ì²éÃÜÂë¡£";
-        }
+    } else {
+        $responseData['error'] = 'ç”¨æˆ·åä¸å­˜åœ¨';
     }
-    else
-    {
-        // ÓÃ»§Ãû²»´æÔÚ
-        echo "µÇÂ¼Ê§°Ü£¬Çë¼ì²éÓÃ»§Ãû¡£";
-    }
+    $_SESSION["username"] = $username;
+    echo json_encode($responseData);
+    exit;
 }
+
+
+
 ?>

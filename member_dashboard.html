@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <title>用户控制面板</title>
+  <link rel="stylesheet" href="./css/admin_dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <el-container>
+      <el-header style="height: 100px">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 20px">
+          <span style="font-size: 35px; margin: 0 auto; font-weight: bold">零食管理系统</span>
+          <a href="logout.php" style="font-size: 14px;">退出登录</a>
+        </div>
+      </el-header>
+      <el-container>
+        <el-aside width="200px">
+          <el-menu default-active="1" class="el-menu-vertical-demo">
+            <el-menu-item index="1" @click="showInventory">
+              <i class="el-icon-menu"></i>
+              <span slot="title">零食库存信息</span>
+            </el-menu-item>
+            <el-menu-item index="2" @click="showBuyhistory">
+              <i class="el-icon-star-off"></i>
+              <span slot="title">零食购买记录</span>
+            </el-menu-item>
+          </el-menu>
+        </el-aside>
+        <el-container>
+          <el-main
+            style="background-image: url('./iamge/bgc2.jpg'); background-size: cover; background-position: center;">
+            <div v-if="currentTab === 'inventory'">
+              <div class="login-container" style="margin-top:0px;max-width:800px">
+                <h2>零食库存信息</h2>
+                <el-table :data="snackInventory.slice((currentPage - 1) * pageSize, currentPage*pageSize)"
+                  style="width: 100%">
+                  <el-table-column label="ID" prop="snack_id"></el-table-column>
+                  <el-table-column label="零食名称" prop="snack_name"></el-table-column>
+                  <el-table-column label="单价" prop="unit_price"></el-table-column>
+                  <el-table-column label="已售" prop="snack_sold"></el-table-column>
+                  <el-table-column label="库存" prop="remaining_quantity"></el-table-column>
+                  <el-table-column label="购买数量">
+                    <template slot-scope="scope">
+                      <el-input v-model="scope.row.purchaseQuantity" type="number" :max="scope.row.remaining_quantity"
+                        :min="0" @input="handleInput(scope.row)">
+                      </el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="购买操作">
+                    <template slot-scope="scope">
+                      <el-button type="primary" @click="purchaseItem(scope.row)">购买</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                </br>
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                  :current-page="currentPage" :page-sizes="[6, 12, 18, 24]" :page-size="pageSize" background
+                  layout="prev, pager, next" :total="snackInventory.length">
+                </el-pagination>
+              </div>
+            </div>
+            <div v-if="currentTab === 'buyhistory'">
+              <div class="login-container" style="margin-top:0px;max-width:800px">
+                <h2>零食购买记录</h2>
+                <el-table :data="snackrecord.slice((currentPage2 - 1) * pageSize2, currentPage2*pageSize2)"
+                  style="width: 100%">
+                  <el-table-column label="id" prop="new_id"></el-table-column>
+                  <el-table-column label="时间" :width="200" prop="time"></el-table-column>
+                  <el-table-column label="零食名称" prop="snack_name"></el-table-column>
+                  <el-table-column label="数量" prop="quantity"></el-table-column>
+                  <el-table-column label="总价" prop="price"></el-table-column>
+                </el-table>
+                </br>
+                <el-pagination @size-change="handleSizeChange2" @current-change="handleCurrentChange2"
+                :current-page="currentPage2" :page-sizes="[6, 12, 18, 24]" :page-size="pageSize2" background
+                layout="prev, pager, next" :total="snackrecord.length">
+              </el-pagination>
+              </div>
+            </div>
+          </el-main>
+          <el-footer style="padding-top: 20px">版权归FPGA所有 | 2023/12/4</el-footer>
+        </el-container>
+      </el-container>
+    </el-container>
+  </div>
+  <script src="./js/member_dashboard.js"></script>
+</body>
+
+</html>

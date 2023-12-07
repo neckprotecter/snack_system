@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>管理员控制面板</title>
+    <link rel="stylesheet" href="./css/admin_dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-container>
+      <el-header style="height: 100px">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 20px">
+          <span style="font-size: 35px; margin: 0 auto; font-weight: bold">零食管理系统</span>
+          <a href="logout.php" style="font-size: 14px;">退出登录</a>
+        </div>
+      </el-header>
+      <el-container>
+        <el-aside width="200px">
+          <el-menu default-active="1" class="el-menu-vertical-demo">
+            <el-menu-item index="1" @click="showInventory">
+              <i class="el-icon-menu"></i>
+              <span slot="title">零食库存信息</span>
+            </el-menu-item>
+            <el-menu-item index="2" @click="showAddStock">
+              <i class="el-icon-setting"></i>
+              <span slot="title">添加库存</span>
+            </el-menu-item>
+            <el-menu-item index="3" @click="showCheckrecord">
+              <i class="el-icon-star-off"></i>
+              <span slot="title">购买记录</span>
+            </el-menu-item>
+          </el-menu>
+        </el-aside>
+        <el-container>
+          <el-main style="background-image: url('./iamge/bgc2.jpg'); background-size: cover; background-position: center;">
+          <div v-if="currentTab === 'inventory'">
+                <div class = "login-container" style = "margin-top:0px;max-width:800px">
+                    <h2>零食库存信息</h2>
+                    <el-table :data="snackInventory.slice((currentPage - 1) * pageSize, currentPage*pageSize)" style="width: 100%">
+                    <el-table-column label="ID" prop="snack_id"></el-table-column>
+                    <el-table-column label="时间" prop="date" :width="200"></el-table-column> <!-- 设置宽度为 150 像素 -->
+                    <el-table-column label="零食名称" prop="snack_name"></el-table-column>
+                    <el-table-column label="总量" prop="snack_quantity"></el-table-column>
+                    <el-table-column label="总价" prop="snack_price"></el-table-column>
+                    <el-table-column label="已售" prop="snack_sold"></el-table-column>
+                    <el-table-column label="单价" prop="unit_price"></el-table-column>
+                  </el-table>
+                  </br>
+                  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                  :current-page="currentPage" :page-sizes="[6, 12, 18, 24]" :page-size="pageSize" background
+                  layout="prev, pager, next" :total="snackInventory.length">
+                </el-pagination>
+                </div>
+            </div>
+            <div v-else-if="currentTab === 'addStock'">"
+                <div class = "login-container" style = "margin-top:0">
+                    <h2>购买记录</h2>
+                    <div class="block">
+                    </div>
+                    <form class="add-stock-form" @submit.prevent="addStock">
+                    <div style = "display:flex;flex-direction:row;margin-top:50px">
+                        <label for="snack_name"style = "margin-top:10px;margin-left:230px;font-weight:bold;margin-right:10px">零食名称</label>
+                        <el-input style = "width:50%" v-model="addStockForm.snack_name"placeholder="请输入添加的零食名称" required></el-input>
+                    </div>
+                    <div style = "display:flex;flex-direction:row;margin-top:50px;margin-bottom:50px">
+                    <label for="snack_quantity" style = "margin-top:10px;margin-right:40px;margin-left:230px;font-weight:bold">数量</label>
+                    <el-input-number v-model="addStockForm.snack_quantity" required></el-input-number>
+                    <label for="snack_price"style = "margin-top:10px;margin-left:50px;font-weight:bold;margin-right:10px">进货价格</label>
+                    <el-input-number v-model="addStockForm.snack_price" :step="0.5" required></el-input-number>
+                    </div>
+                    <el-button type="primary" native-type="submit">添加库存</el-button>
+                    </form>
+                </div>
+            </div>
+            <div v-else-if="currentTab === 'checkrecord'">
+              <div class="login-container" style="margin-top: 0px; max-width: 800px">
+                <h2>零食购买记录</h2>
+                <el-table :data="snackrecord.slice((currentPage2 - 1) * pageSize, currentPage2*pageSize2)" style="width: 100%">
+                  <el-table-column label="ID" prop="id"></el-table-column>
+                  <el-table-column label="时间" prop="time" :width="200"></el-table-column>
+                  <el-table-column label="用户名" prop="username"></el-table-column>
+                  <el-table-column label="零食名称" prop="snack_name"></el-table-column>
+                  <el-table-column label="数量" prop="quantity"></el-table-column>
+                  <el-table-column label="价格" prop="price"></el-table-column>
+                </el-table>
+                </br>
+                <el-pagination @size-change="handleSizeChange2" @current-change="handleCurrentChange2"
+                :current-page="currentPage2" :page-sizes="[6, 12, 18, 24]" :page-size="pageSize2" background
+                layout="prev, pager, next" :total="snackrecord.length">
+              </el-pagination>
+              </div>
+            </div>
+          </el-main>
+          <el-footer style="padding-top: 20px">版权归FPGA所有 | 2023/12/4</el-footer>
+        </el-container>
+      </el-container>
+    </el-container>
+  </div>
+    <script src="./js/admin_dashboard.js"></script>
+</body>
+</html>

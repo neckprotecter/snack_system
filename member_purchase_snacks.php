@@ -21,7 +21,7 @@
     session_start();
 
     // 连接数据库（根据你的数据库信息进行修改）
-    $servername = "10.151.1.73";
+    $servername = "localhost";
     $username = "root";
     $password = "root";
     $database = "snack";
@@ -35,7 +35,7 @@
     {
         foreach ($_POST as $key => $value) 
         {
-            if (strpos($key, 'snack_') == 0) 
+            if (strpos($key, 'snack_') === 0) 
             {
                 $buy_snack_name = substr($key, 6); // 提取零食名称
                 $buy_quantity = (int)$value;
@@ -49,6 +49,7 @@
                 $stmt1->bind_result($snack_price, $snack_quantity);
                 $stmt1->fetch();
                 $stmt1->close();
+                
 
                 $query = "UPDATE snacks SET snack_sold = snack_sold + ? WHERE snack_name = ?";
                 $stmt2 = $conn->prepare($query);
@@ -110,16 +111,15 @@
     }
     ?>
     <br>
+    <form method="post" action="http://localhost:80/userlogin.html">
+    <br>
+    <input type="submit" value="返回登录界面">
+    <br>
 
-    <form method="post" action="http://10.151.1.73:80/userlogin.html">
-        <br>
-        <input type="submit" value="返回登录界面">
-        <br>
-
-        <h4>如果想支持一下开发人员^_^</h4>
-        <img src="payphoto.jpg" alt="收款码" width="270" height="345.75">
+    <h4>如果想支持一下开发人员^_^</h4>
+    <img src="payphoto.jpg" alt="收款码" width="270" height="345.75">
 
 
-    </form>
+</form>
 </body>
 </html>
