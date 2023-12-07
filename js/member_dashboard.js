@@ -72,7 +72,7 @@ new Vue({
         this.currentPage2 = val
       },
       fetchSnackInventory() {
-        axios.get('http://localhost/snack_system/fetch_snack_inventory_forUser.php')
+        axios.get('http://192.168.1.107/snack_system/fetch_snack_inventory_forUser.php')
         .then(response => {
           console.log("res",response.data);
           this.snackInventory = response.data;
@@ -83,7 +83,7 @@ new Vue({
       },
       fetchSnackRecord() {
         let that = this;
-        axios.get('http://localhost/snack_system/purchase_history.php', {
+        axios.get('http://192.168.1.107/snack_system/purchase_history.php', {
           params: {
             username: that.username
           }
@@ -104,7 +104,7 @@ new Vue({
           totalprice: row.purchaseQuantity* row.unit_price,
         };
         console.log('purchaseinfo',purchaseData);
-        axios.post('http://localhost/snack_system/purchase.php', purchaseData)
+        axios.post('http://192.168.1.107/snack_system/purchase.php', purchaseData)
           .then(response => {
             console.log('购买成功:', response.data);
             that.$message({

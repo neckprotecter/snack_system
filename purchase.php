@@ -49,6 +49,13 @@ if ($insertQuery->execute()) {
 else {
     echo json_encode(['success' => false, 'message' => '购买失败']);
 }
+$insertQuery->close();
+
+$query = "UPDATE snacks SET snack_sold = snack_sold + ? WHERE snack_name = ?";
+$stmt2 = $conn->prepare($query);
+$stmt2->bind_param("is", $_purchaseQuantity, $_snackname);
+$stmt2->execute();
+$stmt2->close();
 
 // 关闭连接
 $conn->close();

@@ -75,7 +75,7 @@ new Vue({
       formData.append('snack_quantity', that.addStockForm.snack_quantity);
       formData.append('snack_price', that.addStockForm.snack_price);
     
-      axios.post('http://localhost/snack_system/admin_add_snack.php', formData)
+      axios.post('http://192.168.1.107/snack_system/admin_add_snack.php', formData)
         .then(response => {
           console.log(response.data);
           that.fetchSnackInventory();
@@ -95,7 +95,7 @@ new Vue({
         });
     },
     fetchSnackInventory() {
-      axios.get('http://localhost/snack_system/fetch_snack_inventory.php')
+      axios.get('http://192.168.1.107/snack_system/fetch_snack_inventory.php')
       .then(response => {
         this.snackInventory = response.data;
       })
@@ -104,7 +104,7 @@ new Vue({
       });
     },
     fetchSnackRecord() {
-      axios.get('http://localhost/snack_system/purchase_historytotal.php')
+      axios.get('http://192.168.1.107/snack_system/purchase_historytotal.php')
         .then(response => {
           this.snackrecord = response.data;
         })
