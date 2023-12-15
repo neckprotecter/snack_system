@@ -4,7 +4,8 @@ session_start();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $servername = "localhost"; 
     $username = "root"; 
-    $password = "root"; 
+    // $password = "root"; 
+    $password = "root1234"; 
     $database = "snack"; 
     $responseData = [];
     $conn = new mysqli($servername, $username, $password, $database);

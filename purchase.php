@@ -4,7 +4,8 @@ session_start();
 
 $servername = "localhost";
 $username = "root";
-$password = "root";
+// $password = "root";
+$password = "root1234";
 $database = "snack";
 
 

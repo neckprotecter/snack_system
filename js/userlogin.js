@@ -16,7 +16,8 @@ new Vue({
             let formData = new FormData();
             formData.append('username', that.loginForm.username);
             formData.append('password', that.loginForm.password);
-            axios.post('http://192.168.1.107/snack_system/userlogin_do.php', formData)
+            // axios.post('http://192.168.1.107/snack_system/userlogin_do.php', formData)
+            axios.post('http://localhost/snack_system/userlogin_do.php', formData)
                 .then(response => {
                     console.log('Login response:', response.data);
                     if (response.data.redirect) {

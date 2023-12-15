@@ -42,60 +42,121 @@
         <el-container>
           <el-main style="background-image: url('./iamge/bgc2.jpg'); background-size: cover; background-position: center;">
           <div v-if="currentTab === 'inventory'">
-                <div class = "login-container" style = "margin-top:0px;max-width:800px">
-                    <h2>零食库存信息</h2>
-                    <el-table :data="snackInventory.slice((currentPage - 1) * pageSize, currentPage*pageSize)" style="width: 100%">
-                    <el-table-column label="ID" prop="snack_id"></el-table-column>
-                    <el-table-column label="时间" prop="date" :width="200"></el-table-column> <!-- 设置宽度为 150 像素 -->
-                    <el-table-column label="零食名称" prop="snack_name"></el-table-column>
-                    <el-table-column label="总量" prop="snack_quantity"></el-table-column>
-                    <el-table-column label="总价" prop="snack_price"></el-table-column>
-                    <el-table-column label="已售" prop="snack_sold"></el-table-column>
-                    <el-table-column label="单价" prop="unit_price"></el-table-column>
-                  </el-table>
-                  </br>
-                  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                  :current-page="currentPage" :page-sizes="[6, 12, 18, 24]" :page-size="pageSize" background
-                  layout="prev, pager, next" :total="snackInventory.length">
-                </el-pagination>
-                </div>
+            <div class = "login-container" style = "margin-top:0px;max-width:800px">
+                <h2>零食库存信息</h2>
+                <el-table :data="snackInventory.slice((currentPage - 1) * pageSize, currentPage*pageSize)" style="width: 100%">
+                <el-table-column label="ID" prop="snack_id"></el-table-column>
+                <el-table-column label="时间" prop="date" :width="200"></el-table-column> <!-- 设置宽度为 150 像素 -->
+                <el-table-column label="零食名称" prop="snack_name"></el-table-column>
+                <el-table-column label="总量" prop="snack_quantity"></el-table-column>
+                <el-table-column label="总价" prop="snack_price"></el-table-column>
+                <el-table-column label="已售" prop="snack_sold"></el-table-column>
+                <el-table-column label="单价" prop="unit_price"></el-table-column>
+              </el-table>
+              </br>
+              <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+              :current-page="currentPage" :page-sizes="[6, 12, 18, 24]" :page-size="pageSize" background
+              layout="prev, pager, next" :total="snackInventory.length">
+            </el-pagination>
             </div>
-            <div v-else-if="currentTab === 'addStock'">"
-                <div class = "login-container" style = "margin-top:0">
-                    <h2>购买记录</h2>
-                    <div class="block">
-                    </div>
-                    <form class="add-stock-form" @submit.prevent="addStock">
-                    <div style = "display:flex;flex-direction:row;margin-top:50px">
-                        <label for="snack_name"style = "margin-top:10px;margin-left:230px;font-weight:bold;margin-right:10px">零食名称</label>
-                        <el-input style = "width:50%" v-model="addStockForm.snack_name"placeholder="请输入添加的零食名称" required></el-input>
-                    </div>
-                    <div style = "display:flex;flex-direction:row;margin-top:50px;margin-bottom:50px">
-                    <label for="snack_quantity" style = "margin-top:10px;margin-right:40px;margin-left:230px;font-weight:bold">数量</label>
-                    <el-input-number v-model="addStockForm.snack_quantity" required></el-input-number>
-                    <label for="snack_price"style = "margin-top:10px;margin-left:50px;font-weight:bold;margin-right:10px">进货价格</label>
-                    <el-input-number v-model="addStockForm.snack_price" :step="0.5" required></el-input-number>
-                    </div>
-                    <el-button type="primary" native-type="submit">添加库存</el-button>
-                    </form>
-                </div>
+          </div>
+          <div v-else-if="currentTab === 'addStock'">
+              <div class = "login-container" style = "margin-top:0">
+                  <h2>添加库存</h2>
+                  <div class="block">
+                  </div>
+                  <form class="add-stock-form" @submit.prevent="addStock">
+                  <div style = "display:flex;flex-direction:row;margin-top:50px">
+                      <label for="snack_name"style = "margin-top:10px;margin-left:230px;font-weight:bold;margin-right:10px">零食名称</label>
+                      <el-input style = "width:50%" v-model="addStockForm.snack_name"placeholder="请输入添加的零食名称" required></el-input>
+                  </div>
+                  <div style = "display:flex;flex-direction:row;margin-top:50px;margin-bottom:50px">
+                  <label for="snack_quantity" style = "margin-top:10px;margin-right:40px;margin-left:230px;font-weight:bold">数量</label>
+                  <el-input-number v-model="addStockForm.snack_quantity" required></el-input-number>
+                  <label for="snack_price"style = "margin-top:10px;margin-left:50px;font-weight:bold;margin-right:10px">进货价格</label>
+                  <el-input-number v-model="addStockForm.snack_price" :step="0.5" required></el-input-number>
+                  </div>
+                  <el-button type="primary" native-type="submit">添加库存</el-button>
+                  </form>
+              </div>
+          </div>
+          <div v-else-if="currentTab === 'checkrecord'">
+            <div class="login-container" style="margin-top: 0px; max-width: 1000px">
+              <h2>零食购买记录</h2>
+              <el-table key="tab01" :data="snackrecord.slice((currentPage2 - 1) * pageSize, currentPage2*pageSize2)" style="width: 100%">
+                <el-table-column label="ID" prop="id"></el-table-column>
+                <el-table-column label="时间" prop="time" :width="200"></el-table-column>
+                <el-table-column label="用户名" prop="username"></el-table-column>
+                <el-table-column label="零食名称" prop="snack_name"></el-table-column>
+                <el-table-column label="数量" prop="quantity"></el-table-column>
+                <el-table-column label="价格" prop="price"></el-table-column>
+              </el-table>
+              </br>
+              <el-pagination @size-change="handleSizeChange2" @current-change="handleCurrentChange2"
+              :current-page="currentPage2" :page-sizes="[6, 12, 18, 24]" :page-size="pageSize2" background
+              layout="prev, pager, next" :total="snackrecord.length">
+            </el-pagination>
             </div>
-            <div v-else-if="currentTab === 'checkrecord'">
-              <div class="login-container" style="margin-top: 0px; max-width: 800px">
-                <h2>零食购买记录</h2>
-                <el-table :data="snackrecord.slice((currentPage2 - 1) * pageSize, currentPage2*pageSize2)" style="width: 100%">
-                  <el-table-column label="ID" prop="id"></el-table-column>
-                  <el-table-column label="时间" prop="time" :width="200"></el-table-column>
-                  <el-table-column label="用户名" prop="username"></el-table-column>
-                  <el-table-column label="零食名称" prop="snack_name"></el-table-column>
-                  <el-table-column label="数量" prop="quantity"></el-table-column>
-                  <el-table-column label="价格" prop="price"></el-table-column>
+          </div>
+
+            <!-- 用户信息管理 -->
+            <div v-else-if="currentTab === 'userboard'">
+              <!-- 用户信息查看 -->
+              <div class="login-container" style="margin-top: 0px; max-width: 1000px">
+                <h2>用户信息管理</h2>
+                <el-table key="tab02" :data="userrecord.slice((currentPage2 - 1) * pageSize, currentPage2*pageSize2)" style="width: 100%">
+                  <el-table-column label="ID" prop="id" width="130"></el-table-column>
+                  <el-table-column label="用户名" prop="username" width="170"></el-table-column>
+                  <el-table-column label="用户密码" prop="password" width="170"></el-table-column>
+                  <el-table-column label="身份" prop="role" width="140"></el-table-column>
+                  <el-table-column label="成员类型" prop="member" width="130"></el-table-column>
+
+                  <!-- 修改和删除按钮 -->
+                  <el-table-column label="操作" width="200" >
+                    <template slot-scope="scope">
+                      <div style="display: flex; flex-direction: row;">
+                        <el-button type="primary" size="mini" @click="alterUser(scope.row.id)">修改</el-button>
+                        <el-button type="danger" size="mini" @click="deleteUser(scope.row.id)">删除</el-button>
+                      </div>
+                    </template>
+                  </el-table-column>
                 </el-table>
                 </br>
+
                 <el-pagination @size-change="handleSizeChange2" @current-change="handleCurrentChange2"
                 :current-page="currentPage2" :page-sizes="[6, 12, 18, 24]" :page-size="pageSize2" background
-                layout="prev, pager, next" :total="snackrecord.length">
-              </el-pagination>
+                layout="prev, pager, next" :total="userrecord.length">
+                </el-pagination>
+                </div>
+              </br>
+              <!-- 进行用户账号注册 -->
+              <div class = "login-container" style = "margin-top:0">
+                <h2>新用户注册</h2>
+                <div class="block">
+                </div>
+                <form class="add-stock-form" @submit.prevent="addUser">
+                <div style = "display:flex;flex-direction:row;margin-top:50px">
+                    <label for="username"style = "margin-top:10px;margin-left:230px;font-weight:bold;margin-right:10px;">用户名</label>
+                    <el-input style = "width:60%" v-model="addUserForm.username"placeholder="请输入注册的用户名" required></el-input>
+                </div>
+                <div style = "display:flex;flex-direction:row;margin-top:50px">
+                  <label for="password"style = "margin-top:10px;margin-left:230px;font-weight:bold;margin-right:10px">密  码</label>
+                  <el-input style = "width:60%" v-model="addUserForm.password"placeholder="请输入密码" required></el-input>
+                </div>
+                <div style="display: flex; flex-direction: row; margin-top: 20px; margin-bottom: 20px; align-items: center">
+                  <label for="role" style="margin-top: 0px; margin-right: 40px; margin-left: 230px; font-weight: bold; ">身份</label>
+                  <el-radio-group v-model="addUserForm.role" required>
+                    <el-radio label="1">管理员</el-radio>
+                    <el-radio label="2">普通用户</el-radio>
+                  </el-radio-group>
+                  <label for="member" style="margin-top: 0px; margin-left: 30px; font-weight: bold; margin-right: 10px;">成员类型</label>
+                  <el-radio-group v-model="addUserForm.member" :step="0.5" required>
+                    <el-radio label="1">正式成员</el-radio>
+                    <el-radio label="0">实习成员</el-radio>
+                  </el-radio-group>
+                </div>
+                <el-button type="primary" native-type="submit">注册新用户</el-button>
+                </form>
               </div>
             </div>
           </el-main>

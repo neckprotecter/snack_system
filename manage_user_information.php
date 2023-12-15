@@ -8,21 +8,23 @@ $username = "root";
 $password = "root1234"; 
 $database = "snack"; 
 
-// åˆ›å»ºæ•°æ®åº“è¿žæŽ¥
+// ´´½¨Êý¾Ý¿âÁ¬½Ó
 $conn = new mysqli($servername, $username, $password, $database);
 
-$query = "SELECT snack_id, snack_name, snack_quantity, snack_sold, ROUND(snack_price / snack_quantity, 2) AS unit_price, (snack_quantity - snack_sold) AS remaining_quantity FROM snacks ORDER BY snack_id";
+// ²éÑ¯Êý¾Ý¿âÖÐÓÃ»§µÄÐÅÏ¢
+$query = "SELECT * FROM users ORDER BY id";
 $result = $conn->query($query);
 
 if ($result->num_rows > 0) {
-    $snackInventory = array();
+    $usermessage = array();
 
     while ($row = $result->fetch_assoc()) {
-        $snackInventory[] = $row;
+        $usermessage[] = $row;
     }
-    echo json_encode($snackInventory);
+
+    echo json_encode($usermessage);
 } else {
-    echo json_encode(array('message' => 'æŸ¥è¯¢åˆ°è¡¨å•ä¸ºç©ºã€‚'));
+    echo json_encode(array('message' => '²éÑ¯µ½±íµ¥Îª¿Õ¡£'));
 }
 
 $conn->close();
