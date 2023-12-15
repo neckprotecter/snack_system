@@ -147,30 +147,36 @@ new Vue({
         });
     },
     // 删除用户
-    deleteUser(userId) {
-      // 实现删除具有指定userId的用户
-      let that = this;
-      let formData = new FormData();
-      formData.append('userId', userId);
-      // axios.delete(`/api/users/${userId}`)
-      axios.post('http://localhost/snack_system/admin_delete_user.php', formData)
-        .then(response => {
-          console.log(response.data);
-          that.manageuserinformation();  // 重新查询一次，用于刷新表格
-          that.$message({
-            showClose: true,
-            message: '删除成功',
-            type: 'success'
-          });
-        })
-        .catch(error => {
-          console.error('Error adding user:', error);
-          that.$message({
-            showClose: true,
-            message: '删除失败，请重新检查',
-            type: 'error'
-          });
-        });
+    deleteUser(userId, username, userrole, usermember) {
+      this.$confirm('是否确认删除  用户ID为: '+ userId + '\t姓名: ' + username + '\t权限: ' + userrole + '\t身份: ' + usermember + '\t的用户?', {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then( () => {
+        // 实现删除具有指定userId的用户
+        let that = this;
+        let formData = new FormData();
+        formData.append('userId', userId);
+        // axios.delete(`/api/users/${userId}`)
+        axios.post('http://localhost/snack_system/admin_delete_user.php', formData)
+          .then(response => {
+            console.log(response.data);
+            that.manageuserinformation();  // 重新查询一次，用于刷新表格
+            that.$message({
+              showClose: true,
+              message: '删除成功',
+              type: 'success'
+            });
+          })
+          .catch(error => {
+            console.error('Error adding user:', error);
+            that.$message({
+              showClose: true,
+              message: '删除失败，请重新检查',
+              type: 'error'
+            });
+          })
+      });
     },
     // // 修改用户
     alterUser(userId) {

@@ -5,9 +5,12 @@
     <title>管理员控制面板</title>
     <link rel="stylesheet" href="./css/admin_dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+    <link rel="stylesheet" href="https://unpkg.zhimg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -116,7 +119,7 @@
                     <template slot-scope="scope">
                       <div style="display: flex; flex-direction: row;">
                         <el-button type="primary" size="mini" @click="alterUser(scope.row.id)">修改</el-button>
-                        <el-button type="danger" size="mini" @click="deleteUser(scope.row.id)">删除</el-button>
+                        <el-button type="danger" size="mini" @click="deleteUser(scope.row.id, scope.row.username, scope.row.role, scope.row.member)">删除</el-button>
                       </div>
                     </template>
                   </el-table-column>
@@ -144,12 +147,12 @@
                   <el-input style = "width:60%" v-model="addUserForm.password"placeholder="请输入密码" required></el-input>
                 </div>
                 <div style="display: flex; flex-direction: row; margin-top: 20px; margin-bottom: 20px; align-items: center">
-                  <label for="role" style="margin-top: 0px; margin-right: 40px; margin-left: 230px; font-weight: bold; ">身份</label>
+                  <label for="role" style="margin-top: 5px; margin-right: 40px; margin-left: 230px; font-weight: bold; ">身份</label>
                   <el-radio-group v-model="addUserForm.role" required>
                     <el-radio label="1">管理员</el-radio>
                     <el-radio label="2">普通用户</el-radio>
                   </el-radio-group>
-                  <label for="member" style="margin-top: 0px; margin-left: 30px; font-weight: bold; margin-right: 10px;">成员类型</label>
+                  <label for="member" style="margin-top: 5px; margin-left: 30px; font-weight: bold; margin-right: 10px;">成员类型</label>
                   <el-radio-group v-model="addUserForm.member" :step="0.5" required>
                     <el-radio label="1">正式成员</el-radio>
                     <el-radio label="0">实习成员</el-radio>
