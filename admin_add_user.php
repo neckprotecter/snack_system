@@ -22,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt0->bind_param("s", $username);
     $stmt0->execute();
     $stmt0->store_result();
-    // $stmt0->bind_result($snackid);
 
     if ($stmt0->fetch()) {
         $stmt0->close();
