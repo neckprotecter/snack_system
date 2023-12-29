@@ -11,7 +11,7 @@ $database = "snack";
 // 创建数据库连接
 $conn = new mysqli($servername, $username, $password, $database);
 
-$query = "SELECT snack_id, snack_name, snack_quantity, snack_sold, ROUND(snack_price / snack_quantity, 2) AS unit_price, (snack_quantity - snack_sold) AS remaining_quantity FROM snacks ORDER BY snack_id";
+$query = "SELECT snack_id, snack_name, snack_quantity, snack_sold, ROUND(snack_price / snack_quantity, 2) AS unit_price, (snack_quantity - snack_sold) AS remaining_quantity FROM snacks WHERE (snack_quantity - snack_sold) > 0 ORDER BY snack_id";
 $result = $conn->query($query);
 
 if ($result->num_rows > 0) {

@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         die("数据库连接失败: " . mysqli_connect_error());
 
     $snackid = null;
-    $query = "SELECT * FROM users WHERE id = ?";
+    $query = "SELECT * FROM users WHERE user_id = ?";
     $stmt0 = $conn->prepare($query);
     $stmt0->bind_param("i", $_id);
     $stmt0->execute();
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
         $stmt0->close();
 
-        $delete_query = "DELETE FROM users WHERE id = ?";
+        $delete_query = "DELETE FROM users WHERE user_id = ?";
         $stmt = $conn->prepare($delete_query);
         $stmt->bind_param("i", $_id);
 

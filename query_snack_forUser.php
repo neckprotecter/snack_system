@@ -12,7 +12,7 @@ $conn = new mysqli($servername, $username, $password, $database);
 
 $snackname = $_GET['snackname'];
 $searchInput = "%$snackname%";
-$query = "SELECT snack_id, date, snack_name, snack_quantity, snack_price, snack_sold, ROUND(snack_price / snack_quantity / 2, 2) AS unit_price0,  ROUND(snack_price / snack_quantity / 5, 2) AS unit_price1, ROUND(snack_price / snack_quantity, 2) AS unit_price FROM snacks WHERE snack_name LIKE ? ORDER BY snack_id";
+$query = "SELECT snack_id, date, snack_name, snack_quantity, snack_price, snack_sold, (snack_quantity - snack_sold) AS remaining_quantity, ROUND(snack_price / snack_quantity, 2) AS unit_price FROM snacks WHERE snack_name LIKE ? and (snack_quantity - snack_sold) > 0 ORDER BY snack_id";
 $stmt = $conn->prepare($query);
 
 $stmt->bind_param("s", $searchInput);

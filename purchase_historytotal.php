@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 }
 
 
-$query = "SELECT * FROM purchase_history ORDER BY id";
+$query = "SELECT * FROM purchase_history ORDER BY purchase_id";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 

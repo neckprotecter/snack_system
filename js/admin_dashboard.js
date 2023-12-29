@@ -5,13 +5,14 @@ new Vue({
       username: '',
       currentTab: 'inventory',
       snackInventory: [],
+      bill: {},
       snackrecord:[],
       userrecord:[],
       currentPage: 1,
       currentPage2: 1,
       pageSize: 6,
       pageSize2: 6,
-      dialogVisible: false,
+      inputStr: '',
       dialogTitle: "",
       isView: false,
       isEdit: false,
@@ -33,6 +34,60 @@ new Vue({
         m_role: 1,
         m_member: 0,
       },
+      dialogVisible: false,
+      editForm: {
+        snack_id: 0,
+        date: '',
+        snack_name: '',
+        snack_quantity: 0,
+        add_quantity: 0,
+        snack_price: 0,
+        snack_sold: 0,
+        unit_price: 0,
+      },
+      billresultDialogVisible: false,
+      dateDialogVisible: false,
+      dateRange: [], // 查询账单选择的时间范围
+      pickerOptions: {  // 时间选择
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+
+              console.log('Start Date:', start.toLocaleString());
+              console.log('End Date:', end.toLocaleString());
+            }
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+
+              console.log('Start Date:', start.toLocaleString());
+              console.log('End Date:', end.toLocaleString());
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+
+              console.log('Start Date:', start.toLocaleString());
+              console.log('End Date:', end.toLocaleString());
+            }
+          }
+        ]
+      }
     };
   },
   mounted() {
@@ -45,9 +100,24 @@ new Vue({
     this.fetchSnackInventory();
   },
   methods: {
+    // 退出登录
     logout() {
       window.location.href = 'logout.php';
     },
+    // excel导出
+    exportToExcel() {
+      const worksheet = XLSX.utils.json_to_sheet(this.snackInventory);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'SnackData');
+      const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const saveAs = window.saveAs || FileSaver.saveAs || window.FileSaver.saveAs;
+      if (saveAs) {
+        saveAs(new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), 'snack_inventory.xlsx');
+      } else {
+        console.error('Error: saveAs function not found. Make sure FileSaver is properly imported.');
+      }
+    },
+    // 展示库存
     showInventory() {
       this.currentPage = 1;
       this.currentPage2 = 1;
@@ -56,11 +126,27 @@ new Vue({
       this.currentTab = 'inventory';
       this.fetchSnackInventory(); 
     },
-
+    // 添加库存tab页面
     showAddStock() {
       this.currentTab = 'addStock';
     },
-    
+    // 模糊搜索
+    queryInventory() {
+      let that = this;
+      // axios.get('http://192.168.1.107/snack-management-system/query_snack.php', {
+      axios.get('http://localhost/snack-management-system/query_snack.php', {
+        params: {
+          snackname: that.inputStr
+        }
+      })
+        .then(response => {
+          this.snackInventory = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching snack inventory:', error);
+        });
+    },
+    // 展示购买记录
     showCheckrecord() {
       this.currentPage = 1;
       this.currentPage2 = 1;
@@ -68,6 +154,11 @@ new Vue({
       this.pageSize2 = 6;
       this.currentTab = 'checkrecord';
       this.fetchSnackRecord(); 
+    },
+    // 修改零食信息
+    changeItem(row) {
+      this.editForm = { ...row };
+      this.dialogVisible = true;
     },
     // 用户信息管理
     showuserboard() {
@@ -78,6 +169,7 @@ new Vue({
       this.currentTab = 'userboard';
       this.fetchuserinformation(); 
     },
+    // 权限显示
     roleFormat(row, column) {
       if (row.role === 'admin') {
         return '管理员'
@@ -89,6 +181,7 @@ new Vue({
         return '数据错误'
       }
     },
+    // 成员类型显示
     memberFormat(row, column) {
       if (row.member === '0') {
         return '实习成员'
@@ -100,11 +193,13 @@ new Vue({
         return '数据错误'
       }
     },
+    // 关闭成员信息管理卡片
     closemanageuserCard(){
       this.dialogVisible = false;
       this.isView = false;
       this.isEdit = false;
     },
+    // 展示成员信息管理卡片
     showmodifyUserCard(userid, username, password, role, member){
       this.dialogVisible = true;
       let that = this;
@@ -114,7 +209,7 @@ new Vue({
       that.modifyUserForm.m_role = role;
       that.modifyUserForm.m_member = member;
     },
-
+    // 分页显示
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.pageSize = val
@@ -133,6 +228,7 @@ new Vue({
       console.log(`当前页: ${val}`);
       this.currentPage2 = val
     },
+    // 添加库存
     addStock() {
       let that = this;
       let formData = new FormData();
@@ -159,6 +255,44 @@ new Vue({
             type: 'error'
           });
         });
+    },
+    // 展示日期对话框
+    showDateDialog() {
+      this.dateDialogVisible = true;
+    },
+    // 日期选择处理
+    handleDateSelection() {
+      let that = this;
+      // 处理选择的开始和结束时间
+      const startDate = this.dateRange[0];
+      const endDate = this.dateRange[1];
+      const requestData = {
+        startDate: startDate.toLocaleString(),
+        endDate: endDate.toLocaleString()
+      };
+      
+      axios.post('http://localhost/snack-management-system/admin_fetch_bill.php', requestData)
+      .then(response => {
+        // console.log(response.data);
+        this.bill = response.data;
+        console.log(this.bill);
+        that.$message({
+          showClose: true,
+          message: '查询成功',
+          type: 'success'
+        });
+      })
+      .catch(error => {
+          console.error('Error adding user:', error);
+          that.$message({
+          showClose: true,
+          message: '查询失败:',
+          type: 'error'
+        });
+      });
+
+      this.dateDialogVisible = false;  // 关闭日期显示对话框
+      this.billresultDialogVisible = true;  // 打开结果展示对话框
     },
     // 添加用户
     addUser() {
@@ -221,6 +355,7 @@ new Vue({
           })
       });
     },
+    // 提交用户信息修改
     submitmodifyUserForm(modify_userid){
       this.closemanageuserCard();
       this.modifyUserinformation(modify_userid); 
@@ -257,6 +392,7 @@ new Vue({
         });
       });
     },
+    // 关闭对话框确认
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
@@ -264,6 +400,7 @@ new Vue({
         })
         .catch(_ => {});
     },
+    // 查询库存
     fetchSnackInventory() {
       // axios.get('http://192.168.1.107/snack-management-system/fetch_snack_inventory.php')
       axios.get('http://localhost/snack-management-system/fetch_snack_inventory.php')
@@ -274,6 +411,7 @@ new Vue({
         console.error('Error fetching snack inventory:', error);
       });
     },
+    // 查询购买记录
     fetchSnackRecord() {
       // axios.get('http://192.168.1.107/snack-management-system/purchase_historytotal.php')
       axios.get('http://localhost/snack-management-system/purchase_historytotal.php')
@@ -284,6 +422,7 @@ new Vue({
           console.error('Error fetching snack records:', error);
         });
     },
+    // 查询用户信息
     fetchuserinformation() {
       // axios.get('http://192.168.1.107/snack-management-system/getch_user_information.php')
       axios.get('http://localhost/snack-management-system/fetch_user_information.php')
@@ -293,6 +432,23 @@ new Vue({
       .catch(error => {
         console.error('Error fetching user information:', error);
       });
+    },
+
+    resetForm() {
+      this.editForm = {
+        snack_id: 0,
+        date: '',
+        snack_name: '',
+        add_quantity: 0,
+        snack_price: 0,
+        snack_sold: 0,
+        unit_price: 0,
+      };
+    },
+    updateItem() {
+      console.log('editForm updated', this.editForm);
+
+      this.dialogVisible = false;
     },
   },
 });

@@ -6,12 +6,11 @@
   <title>用户控制面板</title>
   <link rel="stylesheet" href="./css/admin_dashboard.css">
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-  <!-- <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
   <link rel="stylesheet" href="https://unpkg.zhimg.com/element-ui/lib/theme-chalk/index.css">
   <script src="https://unpkg.zhimg.com/element-ui/lib/index.js"></script>
   <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.17.4/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 </head>
 
 <body>
@@ -19,6 +18,7 @@
     <el-container>
       <el-header style="height: 100px">
         <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 20px">
+          <span style="font-size: 18px; margin-left: 20px;">登录账户：{{ username }}    </span> 
           <span style="font-size: 35px; margin: 0 auto; font-weight: bold">零食管理系统</span>
           <a href="logout.php" style="font-size: 14px;">退出登录</a>
         </div>
@@ -40,8 +40,17 @@
           <el-main
             style="background-image: url('./iamge/bgc2.jpg'); background-size: cover; background-position: center;">
             <div v-if="currentTab === 'inventory'">
-              <div class="login-container" style="margin-top:0px;max-width:800px">
+              <div class="login-container" style="margin-top:0px;max-width:1000px">
                 <h2>零食库存信息</h2>
+
+                <el-row style="margin-bottom:15px">
+                  <el-col :span="8" style="margin-right:10px;"><el-input placeholder="请输入内容" v-model="inputStr"
+                      clearable>
+                    </el-input></el-col>
+                  <el-col :span="4"><el-button type="primary" icon="el-icon-edit"
+                      @click="queryInventoryforuser">查询</el-button></el-col>
+                </el-row>
+
                 <el-table :data="snackInventory.slice((currentPage - 1) * pageSize, currentPage*pageSize)"
                   style="width: 100%">
                   <el-table-column label="ID" prop="snack_id"></el-table-column>
@@ -70,7 +79,7 @@
               </div>
             </div>
             <div v-if="currentTab === 'buyhistory'">
-              <div class="login-container" style="margin-top:0px;max-width:800px">
+              <div class="login-container" style="margin-top:0px;max-width:1000px">
                 <h2>零食购买记录</h2>
                 <el-table :data="snackrecord.slice((currentPage2 - 1) * pageSize2, currentPage2*pageSize2)"
                   style="width: 100%">

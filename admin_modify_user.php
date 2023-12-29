@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $snackid = null;
 
-    $query = "SELECT * FROM users WHERE id = ?";
+    $query = "SELECT * FROM users WHERE user_id = ?";
     $stmt0 = $conn->prepare($query);
     $stmt0->bind_param("i", $_userid);
     $stmt0->execute();
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
         $stmt0->close();
 
-        $update_query = "UPDATE users SET username = ?, password = ?, role = ?, member = ? WHERE id = ?";
+        $update_query = "UPDATE users SET username = ?, password = ?, role = ?, member = ? WHERE user_id = ?";
         $stmt = $conn->prepare($update_query);
         $stmt->bind_param("sssii", $_username, $_password, $_role, $_member, $_userid);
 

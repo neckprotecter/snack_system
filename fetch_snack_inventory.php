@@ -12,7 +12,7 @@ $database = "snack";
 $conn = new mysqli($servername, $username, $password, $database);
 
 // 查询数据库中零食的信息，包括零食名称、snack_quantity 和 snack_sold
-$query = "SELECT snack_id, date, snack_name, snack_quantity, snack_price, snack_sold, ROUND(snack_price / snack_quantity, 2) AS unit_price FROM snacks ORDER BY snack_id";
+$query = "SELECT snack_id, date, snack_name, snack_quantity, snack_price, snack_sold, ROUND(snack_price / snack_quantity / 2, 2) AS unit_price0,  ROUND(snack_price / snack_quantity / 5, 2) AS unit_price1, ROUND(snack_price / snack_quantity, 2) AS unit_price FROM snacks ORDER BY snack_id";
 $result = $conn->query($query);
 
 if ($result->num_rows > 0) {

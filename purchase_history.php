@@ -16,7 +16,7 @@ if ($conn->connect_error) {
 
 $currentUsername = $_SESSION['username'];
 
-$query = "SELECT * FROM purchase_history WHERE username = ? ORDER BY id";
+$query = "SELECT * FROM purchase_history WHERE username = ? ORDER BY purchase_id";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("s", $currentUsername);
 $stmt->execute();

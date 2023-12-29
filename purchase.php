@@ -27,18 +27,25 @@ $_currentTime = date("Y-m-d H:i:s");
 // 输出整个 JSON 数据
 var_dump($data);
 
-// 输出各个变量的值
-// echo "Username: " . $_username . PHP_EOL;
-// echo "Snackname: " . $_snackname . PHP_EOL;
-// echo "Total Price: " . $_totalprice . PHP_EOL;
-// echo "Purchase Quantity: " . $_purchaseQuantity . PHP_EOL;
-// echo "Current Time: " . $_currentTime . PHP_EOL;
+// 查询是实习还是正式成员
+$query = "SELECT member FROM users WHERE username = ?";
+$stmt1 = $conn->prepare($query);
+$stmt1->bind_param("s", $_SESSION["username"]);
+$stmt1->execute();
+$stmt1->bind_result($usermember);
+$stmt1->fetch();
+$stmt1->close();
 
-// $insertQuery = "INSERT INTO purchase_history (time, username, snack_name, quantity, price)
-//                 VALUES ('$currentTime', '$username', $snackname, $purchaseQuantity, $totalprice)";
+if($usermember == 1)
+    $discount = 0.2;  // 正式成员2折
+else
+    $discount = 0.5;  // 实习成员5折
+
+// 折扣计算
+$_totalprice = number_format($discount * $_totalprice, 2);
 
 // 使用准备好的语句防止SQL注入
-$query = "INSERT INTO purchase_history (id, time, username, snack_name, quantity, price) VALUES (NULL, NULL, ?, ?, ?, ?)";
+$query = "INSERT INTO purchase_history (purchase_id, time, username, snack_name, quantity, price) VALUES (NULL, NULL, ?, ?, ?, ?)";
 $insertQuery = $conn->prepare($query);
 
 // 绑定参数
@@ -52,11 +59,22 @@ else {
 }
 $insertQuery->close();
 
-$query = "UPDATE snacks SET snack_sold = snack_sold + ? WHERE snack_name = ?";
-$stmt2 = $conn->prepare($query);
-$stmt2->bind_param("is", $_purchaseQuantity, $_snackname);
-$stmt2->execute();
-$stmt2->close();
+// 查询购买历史中某种零食的购买次数
+$query = "SELECT SUM(quantity) FROM purchase_history WHERE snack_name = ?";
+$stmt3 = $conn->prepare($query);
+$stmt3->bind_param("s", $_snackname);
+$stmt3->execute();
+$stmt3->bind_result($purchaseCount);
+$stmt3->fetch();
+$stmt3->close();
+
+// 更新 snacks 表的 snack_sold
+$query = "UPDATE snacks SET snack_sold = ? WHERE snack_name = ?";
+$stmt4 = $conn->prepare($query);
+// $newSnackSold = $purchaseCount + $_purchaseQuantity;
+$stmt4->bind_param("is", $purchaseCount, $_snackname);
+$stmt4->execute();
+$stmt4->close();
 
 // 关闭连接
 $conn->close();

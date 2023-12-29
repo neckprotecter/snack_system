@@ -12,7 +12,7 @@ $database = "snack";
 $conn = new mysqli($servername, $username, $password, $database);
 
 // 查询数据库中用户的信息
-$query = "SELECT * FROM users ORDER BY id";
+$query = "SELECT * FROM users ORDER BY user_id";
 $result = $conn->query($query);
 
 if ($result->num_rows > 0) {
